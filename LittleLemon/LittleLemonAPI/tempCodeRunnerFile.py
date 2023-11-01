@@ -1,0 +1,1 @@
+        if reminder==0:
