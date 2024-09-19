@@ -22,17 +22,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Set environment variable for database path
+        run: echo "DB_PATH=$GITHUB_WORKSPACE/data/todos.sqlite" >> $GITHUB_ENV
+
       - name: Run tests
+        env:
+          DB_PATH: ${{ env.DB_PATH }}  # Use the environment variable in tests
         run: npm test
 
       - name: Build project
         run: npm run build
 
       - name: Echo your name
-        run: echo "This workflow was triggered by [Your Name]"
+        run: echo "This workflow was triggered by ${USER_NAME}"
         env:
-          USER_NAME: ${{ github.actor }}  # Replace this with a specific name if you want.
-          
+          USER_NAME: ${{ github.actor }}  # Use the GitHub actor as the user name
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -43,7 +48,7 @@ jobs:
 
       - name: Deploy code
         run: echo "Deploying application..."
-        
+
       - name: GitHub API Request with Token
         run: |
           echo "Using GitHub token for authentication"
