@@ -1,11 +1,15 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
-const location = process.env.SQLITE_DB_LOCATION || '/etc/todos/todo.db';
+const path = require('path');
+const os = require('os');
 
-let db, dbAll, dbRun;
+// Use a writable temporary directory if not specified in the environment variable
+const location = process.env.SQLITE_DB_LOCATION || path.join(os.tmpdir(), 'todos', 'todo.db');
+
+let db;
 
 function init() {
-    const dirName = require('path').dirname(location);
+    const dirName = path.dirname(location);
     if (!fs.existsSync(dirName)) {
         fs.mkdirSync(dirName, { recursive: true });
     }
